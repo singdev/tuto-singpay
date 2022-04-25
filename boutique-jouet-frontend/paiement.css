@@ -1,0 +1,39 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+
+body {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1rem;
+  width: 100vw;
+  height: 100vh;
+  flex-direction: column;
+}
+
+.jouet {
+  flex: 1;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+.jouet h2, .jouet p  {
+  padding-bottom: 1rem;
+  text-align: center;
+}
+
+.jouet img {
+  width: 200px;
+}
+
+p {
+  text-align: center;
+}

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boutique de jouets</title>
+    
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+      
+      header {
+        width: 100%;
+        background-color: #ccc;
+        padding: 2rem;
+        margin-bottom: 2rem;
+      }
+      
+      header h1 {
+        padding-bottom: 1rem;
+      }
+      
+      .jouets {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin: 1rem;
+      }
+      
+      .jouet {
+        flex: 1;
+        max-width: 300px;
+      }
+      
+      .jouet h2, .jouet p  {
+        padding-bottom: 1rem;
+      }
+      
+      .jouet img {
+        height: 200px;
+      }
+    </style>
+    
+  </head>
+  <body>
+    <header>
+      <h1>Bienvenue dans ma boutique à jouet</h1>
+      <p>Qu'est ce qui vous ferait plaisir?</p>
+    </header>
+
+    <main>
+      <div class="jouets" id="jouets">
+
+      </div>
+    </main>
+  </body>
+
+  <script>
+  
+  const apiURL = "http://localhost:9024";
+  
+  //Action à réaliser au chargement de la page
+  window.addEventListener("load", async () => {
+    await loadAllJouets();
+  });
+  
+  
+  //Fonction de récupération et appel de la fonction d'affichage des articles
+  async function loadAllJouets(){
+    const res = await fetch(apiURL + "/articles");
+    if(res.status == 200){
+      displayAllJouets(await res.json());
+    } else {
+      alert("Problème de connexion à internet, veuillez rafraichir la page :o)");
+    }
+  }
+  
+  //Fonction d'affichage des articles
+  function displayAllJouets(jouets){
+   const root = document.getElementById("jouets");
+  let str = "";
+  for(let i = 0; i < jouets.length; i++){
+    str += `
+      <div class="jouet">
+          <img src="${jouets[i].img}" alt="Image du jouet">
+          <h2>${jouets[i].name}</h2>
+          <p>${jouets[i].amount} FCFA</p>
+          <button onclick="paye(${jouets[i].id})">Payer</button>   
+      </div>
+    `;
+  }
+   
+  root.innerHTML = str;
+  }
+  
+  async function paye(articleId){
+    const res = await fetch(apiURL + "/paiement/" + articleId);
+    if(res.status == 200){
+      const result = await res.json();
+      console.log(result);
+      if(result.success){
+        location.href = result.result.link;
+      } else {
+        alert("Echec de l'initialisation du paiement. Veuillez enregistrer votre commande, nous vous recontacterons.");
+      }
+    } else {
+      alert("Problème de connexion à internet, veuillez rafraichir la page :o)");
+    }
+  }
+  
+</script>
+</html>
